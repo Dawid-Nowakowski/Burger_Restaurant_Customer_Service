@@ -1,6 +1,7 @@
 package Customer.customer;
 
 import Customer.exception.DuplicateResourceException;
+import Customer.exception.RequestValidationException;
 import Customer.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ public class CustomerService {
 
     private final CustomerDao customerDao;
 
-    public CustomerService(@Qualifier("jpa") CustomerDao customerDao) {
+    public CustomerService(@Qualifier("jdbc") CustomerDao customerDao) {
         this.customerDao = customerDao;
     }
 
@@ -40,4 +41,39 @@ public class CustomerService {
         customerDao.insertCustomer(customer);
     }
 
+    public void deleteCustomer(Integer id) {
+        if (!customerDao.existsPersonWithId(id)) {
+            throw new DuplicateResourceException("Customer with id [%s] does not exists".formatted(id));
+        }
+        customerDao.deleteCustomerById(id);
+    }
+
+    public void updateCustomer(Integer customerId,
+                               CustomerRegistrationRequest updateRequest) {
+        Customer customer = getCustomer(customerId);
+
+        boolean changes = false;
+
+        if (updateRequest.name() != null && !updateRequest.name().equals(customer.getName())) {
+            customer.setName(updateRequest.name());
+            changes = true;
+        }
+
+        if (updateRequest.age() != null && !updateRequest.age().equals(customer.getAge())) {
+            customer.setAge(updateRequest.age());
+            changes = true;
+        }
+
+        if (updateRequest.email() != null && !updateRequest.email().equals(customer.getEmail())) {
+            if (customerDao.existsPersonWithEmail(updateRequest.email())) {
+                throw new DuplicateResourceException("email already taken");
+            }
+            customer.setEmail(updateRequest.email());
+            changes = true;
+        }
+        if (!changes) {
+            throw new RequestValidationException("No data changes found");
+        }
+        customerDao.updateCustomer(customer);
+    }
 }

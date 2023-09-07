@@ -14,11 +14,6 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    /*
-   @RequestMapping(
-           path = "api/v1/customer",
-           method = RequestMethod.GET
-   )*/
     @GetMapping
     public List<Customer> getCustomers() {
         return customerService.getAllCustomers();
@@ -32,7 +27,19 @@ public class CustomerController {
 
     @PostMapping
     public void registerCustomer(
-            @RequestBody CustomerRegistrationRequest request){
+            @RequestBody CustomerRegistrationRequest request) {
         customerService.addCustomer(request);
+    }
+
+    @DeleteMapping("{customerId}")
+    public void deleteCustomer(@PathVariable("customerId") Integer customerId) {
+        customerService.deleteCustomer(customerId);
+    }
+
+    @PutMapping("{customerId}")
+    public void updateCustomer(
+            @PathVariable("customerId") Integer customerId,
+            @RequestBody CustomerRegistrationRequest updateRequest) {
+        customerService.updateCustomer(customerId, updateRequest);
     }
 }
