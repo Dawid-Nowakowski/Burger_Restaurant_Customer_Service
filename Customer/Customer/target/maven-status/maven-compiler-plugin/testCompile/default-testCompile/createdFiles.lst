@@ -1,0 +1,12 @@
+Customer\customer\CustomerJPADataAccessServiceTest.class
+Customer\journey\CustomerIntegrationTest$2.class
+Customer\customer\CustomerRowMapperTest.class
+Customer\AbstractTestcontainers.class
+Customer\TestcontainersTest.class
+Customer\customer\CustomerJDBCDataAccessTest.class
+Customer\customer\CustomerRepositoryTest.class
+Customer\journey\CustomerIntegrationTest$1.class
+Customer\journey\CustomerIntegrationTest$4.class
+Customer\journey\CustomerIntegrationTest$3.class
+Customer\customer\CustomerServiceTest.class
+Customer\journey\CustomerIntegrationTest.class
